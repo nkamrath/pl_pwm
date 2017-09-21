@@ -34,8 +34,9 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity pwm_controller is
 Generic
 (
-    gNUM_CHANNELS             : natural := 8;
-    gREGISTER_BIT_WIDTH       : natural := 32
+    gNUM_CHANNELS                   : natural := 8;
+    gREGISTER_BIT_WIDTH             : natural := 32;
+    gCONTROL_REGISTER_BIT_WIDTH     : natural := 4
 );
 Port 
 (
@@ -61,7 +62,7 @@ architecture Behavioral of pwm_controller is
         --inputs
         CLK                   : in std_logic;
         RESET                 : in std_logic;
-        CONTROL               : in std_logic_vector((gREGISTER_BIT_WIDTH-1) downto 0);
+        CONTROL               : in std_logic_vector((gCONTROL_REGISTER_BIT_WIDTH-1) downto 0);
         CLOCK_CONFIGURATION   : in std_logic_vector((gREGISTER_BIT_WIDTH-1) downto 0);
         PERIOD                : in std_logic_vector((gREGISTER_BIT_WIDTH-1) downto 0);
         DUTY_CYCLE            : in std_logic_vector((gREGISTER_BIT_WIDTH-1) downto 0);
@@ -83,7 +84,7 @@ pwm_channel_1: pwm_channel port map
 (
     CLK => CLK,
     RESET => local_reset,
-    CONTROL => CONTROL,
+    CONTROL => CONTROL((gCONTROL_REGISTER_BIT_WIDTH-1) downto 0),
     CLOCK_CONFIGURATION => CLOCK_CONFIGURATION,
     PERIOD => PERIODS(31 downto 0),
     DUTY_CYCLE => DUTY_CYCLES(31 downto 0),
@@ -96,7 +97,7 @@ pwm_channel_2: pwm_channel port map
 (
     CLK => CLK,
     RESET => local_reset,
-    CONTROL => CONTROL,
+    CONTROL => CONTROL(((gCONTROL_REGISTER_BIT_WIDTH*2)-1) downto 4),
     CLOCK_CONFIGURATION => CLOCK_CONFIGURATION,
     PERIOD => PERIODS(63 downto 32),
     DUTY_CYCLE => DUTY_CYCLES(63 downto 32),
